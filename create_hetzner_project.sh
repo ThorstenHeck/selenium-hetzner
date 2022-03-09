@@ -4,7 +4,7 @@ mkdir -p /tmp/hetzner_api_token
 chown 1200:1201 /tmp/hetzner_api_token
 
 docker build -t hetzner_login . 
-k
+
 docer run --rm -it \
         -v /tmp/hetzner_api_token:/home/seluser/hetzner_api_token \
         -e USERNAME=simonlauber@outlook.de \
