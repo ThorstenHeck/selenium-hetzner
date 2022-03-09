@@ -6,8 +6,6 @@ import time
 
 username       = os.environ.get('USERNAME')
 password       = os.environ.get('PASSWORD')
-owner_username = os.environ.get('OWNER_USERNAME')
-owner_password = os.environ.get('OWNER_PASSWORD')
 submit         = "submit-login"
 project        = os.environ.get('PROJECT')
 permissions    = os.environ.get('PERMISSIONS') # Valid inputs: "Read" "Read & Write"
@@ -26,8 +24,8 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.implicitly_wait(10)
 
 driver.get("https://console.hetzner.cloud")
-driver.find_element(By.ID, "_username").send_keys(owner_username)
-driver.find_element(By.ID, "_password").send_keys(owner_password)
+driver.find_element(By.ID, "_username").send_keys(username)
+driver.find_element(By.ID, "_password").send_keys(password)
 driver.find_element(By.ID, submit).click()
 
 # wait the ready state to be complete
