@@ -5,7 +5,7 @@ chown 1200:1201 /tmp/hetzner_api_token
 
 docker build -t hetzner_login . 
 
-docer run --rm -it \
+docker run --rm -it \
         -v /tmp/hetzner_api_token:/home/seluser/hetzner_api_token \
         -e USERNAME=simonlauber@outlook.de \
         -e PASSWORD=W:3s#9nW% \
