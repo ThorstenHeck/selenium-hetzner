@@ -12,7 +12,7 @@ Auth to 1password
 
 Clone this repo
 
-    git clone <>
+    git clone git@github.com:ThorstenHeck/selenium-hetzner.git
 
 Match your secret management with proper mapping inside 1password and edit the create_etzner_project.sh to your needs.
 
