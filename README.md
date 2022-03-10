@@ -39,9 +39,9 @@ Add Member to a Project
 
 ### Environment variables
 
-USERNAME = Hetzner Account with owner Permissions to be able to create Projects
-PASSWORD = Password for Hetzner Account
-PROJECT = Project name
-PERMISSIONS = API Token permissions, default is Read & Write - it can also be "Read"
-MEMBER = Name of user to add to the Project
-MEMBER_ROLE = Permission Level of the added User - admin, member, restricted is possible
+    USERNAME = Hetzner Account with owner Permissions to be able to create Projects
+    PASSWORD = Password for Hetzner Account
+    PROJECT = Project name
+    PERMISSIONS = API Token permissions, default is Read & Write - it can also be "Read"
+    MEMBER = Name of user to add to the Project
+    MEMBER_ROLE = Permission Level of the added User - admin, member, restricted is possible
