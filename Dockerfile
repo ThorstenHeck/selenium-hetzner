@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY hetzner_login/ /home/seluser
 
-CMD ["python3","hetzner_login.py"]
+ENTRYPOINT ["python3","hetzner_login.py"]

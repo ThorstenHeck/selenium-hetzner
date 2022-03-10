@@ -8,4 +8,4 @@ docker run --rm -it \
         -e PERMISSIONS="Read & Write" \
         -e EMAIL_MEMBER=member@mail.com \
         -e MEMBER_ROLE=admin \
-        hetzner_login python3 hetzner_login.py
+        hetzner_login -c

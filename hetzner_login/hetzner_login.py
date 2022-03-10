@@ -5,6 +5,43 @@ from selenium.webdriver.common.keys import Keys
 import os
 import time 
 import sys
+import getopt
+
+enable_add_member = False
+enable_create_project = False
+enable_generate_token = False
+
+# Get full command-line arguments
+full_cmd_arguments = sys.argv
+
+short_options = "cga"
+long_options = ["create-project", "generate-token", "add-member"]
+
+# Keep all but the first
+argument_list = full_cmd_arguments[1:]
+
+try:
+    arguments, values = getopt.getopt(argument_list, short_options, long_options)
+except getopt.error as err:
+    # Output error, and return with an error code
+    print (str(err))
+    sys.exit(2)
+
+# Evaluate given options
+for current_argument, current_value in arguments:
+    if current_argument in ("-c", "--create-project"):
+        print ("Creating Project")
+        enable_create_project = True
+    elif current_argument in ("-g", "--genenerate-token"):
+        print ("Generate API-Token")
+        enable_generate_token = True
+    elif current_argument in ("-a", "--add-member"):
+        print ("Add Member")
+        enable_add_member = True
+
+if True not in (enable_add_member, enable_create_project, enable_generate_token):
+  print("No argument submitted. Aborting script...")
+  sys.exit()
 
 username       = os.environ.get('USERNAME')
 password       = os.environ.get('PASSWORD')
@@ -59,9 +96,6 @@ except Exception:
     print("Login failed")
     sys.exit()
 
-
-
-
 # create a new Project
 def create_project():
 
@@ -114,10 +148,8 @@ def send_member_invitation():
       sys.exit()
 
     
-
     member_config = driver.find_elements(By.XPATH, "(//*[contains(@class, 'ng-star-inserted')])")
     for n in member_config:
-        print(n.text)
         if "ADD MEMBER" == n.text:
             
             n.click()
@@ -137,6 +169,19 @@ def send_member_invitation():
             actions.send_keys(Keys.ENTER) # send invitation
             actions.perform()
             time.sleep(1.5)
+
+            result = driver.find_elements(By.XPATH, "(//*[contains(@class, 'notification__message__heading ng-star-inserted')])")
+            for r in result:
+                if "User could not be invited" in r.text:
+                    print(r.text)
+                    driver.close()
+                    sys.exit()
+                elif "invalid input in field 'email'" in r.text:
+                    print(r.text)
+                    driver.close()
+                    sys.exit()
+
+            print("Member ", member, "succesfully created")
             break
 ## API Token generation
 def generate_api_token():
@@ -159,29 +204,37 @@ def generate_api_token():
             api_token_list = driver.find_elements(By.XPATH, "(//span[contains(@class, 'click-to-copy__content')])")
             for element in api_token_list:
                 api_token = element.text
+                print("API_TOKEN Succesfully generated:")
                 print(api_token)
         break
 
+
 # create a Hetzner Project
-create_project()
-time.sleep(1)
-
-# enter the project and define navigation URLs
-enter_project()
-project_url = '/'.join(driver.current_url.split("/")[:-1])
-token_url = project_url+"/security/tokens"
-member_url = project_url+"/security/members"
-
-# navigate to security/tokens and generate the api token
-driver.get(token_url)
-time.sleep(1)
-generate_api_token()
-
-# navigate to security/tokens and add member to the Project
-# driver.get(member_url)
-# time.sleep(1)
-# send_member_invitation()
+if enable_create_project == True:
+    create_project()
+    print("Project ", project, "succesfully created")
 
 
-# close the driver
+# Add Member to Project
+if enable_add_member == True:
+    enter_project()
+    project_url = '/'.join(driver.current_url.split("/")[:-1])
+    token_url = project_url+"/security/tokens"
+    member_url = project_url+"/security/members"
+
+    driver.get(member_url)
+    time.sleep(1)
+    send_member_invitation()
+
+# Generate Token
+if enable_generate_token == True:
+    enter_project()
+    project_url = '/'.join(driver.current_url.split("/")[:-1])
+    token_url = project_url+"/security/tokens"
+    member_url = project_url+"/security/members"
+
+    driver.get(token_url)
+    time.sleep(1)
+    generate_api_token()
+
 driver.close()

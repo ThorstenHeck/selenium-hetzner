@@ -1,24 +1,47 @@
 ## Create a fresh Hetzner Project export API_TOKEN manage Member
 
-## Requirements
-
-optional:
-
-1password
-
-Mach 1password with the create_hetzner_project_1password.sh to work properly - so edit the vault and item UID that it works on your behalf. 
-And auth to 1password:
-
-    eval $(op signin)
-
-
-## Setup
-
-
 Clone this repo
 
     git clone git@github.com:ThorstenHeck/selenium-hetzner.git
 
-Run the shell script to build and let selenium create a Project and prints out the created API Token:
+Build the image
 
-    bash create_hetzner_project.sh
+    docker build -t hetzner_login . 
+
+Run the Container with the right environment variables and create a new Project
+
+    docker run --rm \
+            -e USERNAME=hetzner@example.com \
+            -e PASSWORD=seccret \
+            -e PROJECT=New_Project \
+            -e PERMISSIONS="Read & Write" \
+            -e MEMBER=hetznermember@example.com \
+            -e MEMBER_ROLE=admin \
+            hetzner_login -c
+
+        
+## hetzner_login.py
+
+The Container will start the hetzner_login.py and based on its input parameter is capable of creating a Project, Generating an API_Token and prints it and adding Member to an existing Project.  
+
+
+Ceates a new Hetzner Project
+
+    hetzner_login.py -c
+
+Generates an API_TOKEN for an existing project
+
+    hetzner_login.py -g
+
+Add Member to a Project
+
+    hetzner_login.py -a
+
+### Environment variables
+
+USERNAME = Hetzner Account with owner Permissions to be able to create Projects
+PASSWORD = Password for Hetzner Account
+PROJECT = Project name
+PERMISSIONS = API Token permissions, default is Read & Write - it can also be "Read"
+MEMBER = Name of user to add to the Project
+MEMBER_ROLE = Permission Level of the added User - admin, member, restricted is possible
