@@ -73,7 +73,7 @@ permissions = permissions or "Read & Write"
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--headless')
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--window-size=1920,1080")
@@ -94,6 +94,7 @@ try:
     driver.find_element(By.XPATH, "//hc-app[1]")
 except Exception:
     print("Login failed")
+    driver.close()
     sys.exit()
 
 # create a new Project
@@ -108,16 +109,17 @@ def create_project():
             break
     if project_exists == "exists":
       print("Project already exists. Can't create a Project with the same name. Aborting script...")
+      driver.close()
       sys.exit()
     
     # create Hetzner project
 
     new_project = driver.find_element(By.CSS_SELECTOR, "[id^='PAGE_CONTENT-PROJECTS-ADD_PROJECT_BTN']")
     new_project.click()
+    time.sleep(1)
     driver.find_element(By.ID, "name").send_keys(project)
     confirm = driver.find_element(By.CSS_SELECTOR, "[id^='PAGE_CONTENT-PROJECTS-CONFIRM-ADD_BTN']")
     confirm.click()
-
 
 ## enter a Hetzner Project
 def enter_project():
@@ -133,6 +135,7 @@ def enter_project():
             break
     if project_exists != "exists":
         print("Project not found")
+        driver.close()
         sys.exit()
 
 
@@ -141,10 +144,12 @@ def send_member_invitation():
 
     if member is None:
       print("No Member name has been set. Aborting script...")
+      driver.close()
       sys.exit()
 
     if member_role is None:
       print("No Member Role has been set. Aborting script...")
+      driver.close()
       sys.exit()
 
     
@@ -217,6 +222,7 @@ if enable_create_project == True:
 
 # Add Member to Project
 if enable_add_member == True:
+    time.sleep(1)
     enter_project()
     project_url = '/'.join(driver.current_url.split("/")[:-1])
     token_url = project_url+"/security/tokens"
@@ -228,6 +234,7 @@ if enable_add_member == True:
 
 # Generate Token
 if enable_generate_token == True:
+    time.sleep(1)
     enter_project()
     project_url = '/'.join(driver.current_url.split("/")[:-1])
     token_url = project_url+"/security/tokens"
