@@ -23,7 +23,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          tags: thorstenheck0/hetzner-opnsense:selenium-hetzner-v1.0
+          tags: thorstenheck0/hetzner-opnsense:selenium-hetzner-chrome-v1.0
           # build on feature branches, push only on main branch
           push: true
 
